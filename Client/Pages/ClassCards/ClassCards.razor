@@ -1,0 +1,29 @@
+﻿@page "/ClassCards/{Message?}"
+
+@if (_classCards is null)
+{
+    <p>Loading class cards...</p>
+}
+else
+{
+    <RadzenGrid AllowPaging="true" PageSize="20" AllowSorting="true" Data="@_classCards" TItem="ClassCard" ColumnWidth="100px">
+        <Columns>
+            <RadzenGridColumn TItem="ClassCard" Title="Class">
+                <Template Context="classCard">
+                    @_classes.First(x => x.Id == classCard.ClassId).Name
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ClassCard" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="ClassCard" Property="ExperienceCost" Title="Experience Cost" />
+            <RadzenGridColumn TItem="ClassCard" Property="PlayCost" Title="Play Cost" />
+            <RadzenGridColumn TItem="ClassCard" Title="Actions" Sortable="false" Width="135px">
+                <Template Context="classCard">
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowClassCardDetails(classCard)" Icon="list" MouseEnter="@(args => ShowTooltip(args, "Show Details"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => GoToEdit(classCard)" Icon="edit" MouseEnter="@(args => ShowTooltip(args, "Edit Class Card"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => DeleteClassCard(classCard)" Icon="delete" MouseEnter="@(args => ShowTooltip(args, "Delete Class Card"))" />
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+    <AlignedButton Alignment="Alignment.Right" Text="Create Class Card" ButtonType="ButtonType.Button" Click="() => GoToCreateClassCard()" />
+}

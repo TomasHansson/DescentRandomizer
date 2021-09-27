@@ -1,0 +1,29 @@
+﻿@page "/Classes/{Message?}"
+
+@if (_classes is null)
+{
+    <p>Loading classes...</p>
+}
+else
+{
+    <RadzenGrid AllowPaging="true" PageSize="20" AllowSorting="true" Data="@_classes" TItem="Class" ColumnWidth="100px">
+        <Columns>
+            <RadzenGridColumn TItem="Class" Property="Archetype" Title="Archetype" />
+            <RadzenGridColumn TItem="Class" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="Class" Property="HybridClass" Title="Hybrid Class" />
+            <RadzenGridColumn TItem="Class" Title="Hybrid Archetype">
+                <Template Context="selectedClass">
+                    @(selectedClass.HybridClass ? selectedClass.HybridArchetype.ToString() : "")
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Class" Title="Actions" Sortable="false" Width="135px">
+                <Template Context="selectedClass">
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowClassDetails(selectedClass)" Icon="list" MouseEnter="@(args => ShowTooltip(args, "Show Details"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => GoToEdit(selectedClass)" Icon="edit" MouseEnter="@(args => ShowTooltip(args, "Edit Class"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => DeleteClass(selectedClass)" Icon="delete" MouseEnter="@(args => ShowTooltip(args, "Delete Class"))" />
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+    <AlignedButton Alignment="Alignment.Right" Text="Create Class" ButtonType="ButtonType.Button" Click="() => GoToCreateClass()" />
+}

@@ -1,15 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<RadzenNotification />
+<RadzenDialog />
+<RadzenTooltip />
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+<RadzenHeader>
+    <div class="row align-items-center">
+        <div class="col-6 d-flex align-items-center">
+            <RadzenSidebarToggle Click="@(() => { sidebar.Toggle(); body.Toggle(); })" />
+        </div>
+        <div class="col-6 d-flex align-items-center">
+        </div>
     </div>
+</RadzenHeader>
 
-    <div class="content px-4">
+<RadzenBody @ref="@body">
+    <RadzenContentContainer Name="main">
         @Body
-    </div>
-</div>
+    </RadzenContentContainer>
+</RadzenBody>
+
+<RadzenSidebar @ref="@sidebar">
+    <br />
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Administration">
+            <RadzenPanelMenuItem Text="Heroes" Path="/Heroes" Icon="account_circle" />
+            <RadzenPanelMenuItem Text="Classes" Path="/Classes" Icon="account_circle" />
+            <RadzenPanelMenuItem Text="Class Cards" Path="/ClassCards" Icon="account_circle" />
+        </RadzenPanelMenuItem>
+        <RadzenPanelMenuItem Text="Randomizer">
+            <RadzenPanelMenuItem Text="Single Character" Path="/Randomize/Character" Icon="account_circle" />
+            <RadzenPanelMenuItem Text="Full Party" Path="/Randomize/Party" Icon="account_circle" />
+        </RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+</RadzenSidebar>
+
+<RadzenFooter>
+    <RadzenLabel Text="Descent Randomizer" />
+</RadzenFooter>
+
+@code {
+    private RadzenSidebar sidebar;
+    private RadzenBody body;
+}

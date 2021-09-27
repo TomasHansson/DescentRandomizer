@@ -1,0 +1,19 @@
+﻿<div class="row p-1">
+    <div class="col-4 col-md-2">
+        @if (!string.IsNullOrWhiteSpace(Label))
+        {
+            @Label
+        }
+    </div>
+    <div class="col-8 col-md-10">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

@@ -1,0 +1,36 @@
+﻿@page "/ClassCards/Create"
+
+
+@if (_classes is null)
+{
+    <p>Loading classes for lookups...</p>
+}
+else if (!_classes.Any())
+{
+    <p>There are no classes in the database, hence you cannot create any class cards. Please create at least one class first.</p>
+}
+else
+{
+    <RadzenTemplateForm TItem="ClassCard" Data="@_classCard" Submit="@Submit">
+        <RadzenFieldset Text="Create New Class Card">
+            <InputComponent Label="Class">
+                <RadzenDropDown @bind-Value="@_classCard.ClassId" TValue="Guid" Data="_classes" TextProperty="Name" ValueProperty="Id" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Name">
+                <RadzenTextBox @bind-Value="@_classCard.Name" Name="Name" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required." />
+            </InputComponent>
+            <InputComponent Label="Experience Cost">
+                <RadzenNumeric @bind-Value="@_classCard.ExperienceCost" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Play Cost">
+                <RadzenNumeric @bind-Value="@_classCard.PlayCost" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Text">
+                <RadzenTextArea @bind-Value="@_classCard.Text" Name="Text" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Text" Text="Text is required." />
+            </InputComponent>
+            <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Submit" Text="Create Class Card" />
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+}

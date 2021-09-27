@@ -1,0 +1,53 @@
+﻿@page "/Heroes/{id}/Edit"
+
+@if (_hero is null)
+{
+    <p>Loading hero...</p>
+}
+else
+{
+    <RadzenTemplateForm TItem="Hero" Data="@_hero" Submit="@Submit">
+        <RadzenFieldset Text="Edit Hero">
+            <InputComponent Label="Archetype">
+                <RadzenDropDown @bind-Value="@_hero.Archetype" TValue="Archetype" Data="Utility.EnumUtilities.GetArchetypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Name">
+                <RadzenTextBox @bind-Value="@_hero.Name" Name="Name" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required." />
+            </InputComponent>
+            <InputComponent Label="Speed">
+                <RadzenNumeric @bind-Value="@_hero.Speed" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Health">
+                <RadzenNumeric @bind-Value="@_hero.Health" Min="0" Max="20" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Stamina">
+                <RadzenNumeric @bind-Value="@_hero.Stamina" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Defense">
+                <RadzenDropDown @bind-Value="@_hero.Defense" TValue="Defense" Data="Utility.EnumUtilities.GetDefenses()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Willpower">
+                <RadzenNumeric @bind-Value="@_hero.Willpower" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Might">
+                <RadzenNumeric @bind-Value="@_hero.Might" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Knowledge">
+                <RadzenNumeric @bind-Value="@_hero.Knowledge" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Awareness">
+                <RadzenNumeric @bind-Value="@_hero.Awareness" Min="0" Max="10" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Hero Ability">
+                <RadzenTextArea @bind-Value="@_hero.HeroAbility" Name="HeroAbility" Style="width: 100%" />
+                <RadzenRequiredValidator Component="HeroAbility" Text="Hero Ability is required." />
+            </InputComponent>
+            <InputComponent Label="Heroic Feat">
+                <RadzenTextArea @bind-Value="@_hero.HeroicFeat" Name="HeroicFeat" Style="width: 100%" />
+                <RadzenRequiredValidator Component="HeroicFeat" Text="Heroic Feat is required." />
+            </InputComponent>
+            <AlignedButton Alignment="Alignment.Right" Text="Edit Hero" ButtonType="ButtonType.Submit" />
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+}

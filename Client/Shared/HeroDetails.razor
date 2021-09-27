@@ -1,0 +1,39 @@
+﻿<div class="row">
+    <div class="col-6">
+        <p>Name: @Hero.Name</p>
+    </div>
+    <div class="col-6">
+        <p>Archetype: @Hero.Archetype.ToString()</p>
+    </div>
+    <div class="col-6 pt-1">
+        <p>Speed: @Hero.Speed</p>
+        <p>Health: @Hero.Health</p>
+        <p>Stamina: @Hero.Stamina</p>
+        <p>Defense: @Hero.Defense.ToString()</p>
+    </div>
+    <div class="col-6 pt-1">
+        <p>Willpower: @Hero.Willpower</p>
+        <p>Might: @Hero.Might</p>
+        <p>Knowledge: @Hero.Knowledge</p>
+        <p>Awareness: @Hero.Awareness</p>
+    </div>
+    <div class="col-6 pt-1">
+        <p>Hero Ability</p>
+        <p>@Hero.HeroAbility</p>
+    </div>
+    <div class="col-6 pt-1">
+        <p>Heroic Feat</p>
+        <p>@Hero.HeroicFeat</p>
+    </div>
+    <div class="col-12 pt-1">
+        <RadzenButton Text="Close" Click="() => DialogService.Close(true)" Style="margin-bottom: 10px; width: 100%" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Hero Hero { get; set; }
+
+    [Parameter]
+    public DialogService DialogService { get; set; }
+}

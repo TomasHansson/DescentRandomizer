@@ -1,0 +1,65 @@
+﻿@page "/Randomize/Character"
+
+@if (_heroes is null || _classes is null)
+{
+    <p>Loading heroes and classes...</p>
+}
+else if (!_heroes.Any() || !_classes.Any())
+{
+    <p>There must be both heroes and classes in the database in order to generate a random character.</p>
+}
+else
+{
+    <RadzenTemplateForm TItem="RandomCharacterRequest" Data="@_request" Submit="@Submit">
+        <RadzenFieldset Text="Generate Character">
+            <InputComponent Label="Exclude Heroes">
+                <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="@_request.HeroesToExclude"
+                                Multiple="true" Placeholder="Select any heroes to exlude from randomization..." Data="@_heroes" TextProperty="Name" ValueProperty="Id"
+                                Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Exclude Classes">
+                <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="@_request.ClassesToExclude"
+                                Multiple="true" Placeholder="Select any classes to exlude from randomization..." Data="@_classes" TextProperty="Name" ValueProperty="Id"
+                                Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Allow Hybris Classes">
+                <RadzenCheckBox @bind-Value="@_request.AllowHybridClasses" />
+            </InputComponent>
+            <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Submit" Text="Randomize Character" />
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+
+    @if (_character != null && _character.Hero != null && _character.MainClass != null)
+    {
+        <RadzenFieldset Text="Generated Character">
+            <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                    <RadzenCard>
+                        <div class="row d-flex">
+                            <div class="col mr-auto">
+                                Hero: @_character.Hero.Name
+                            </div>
+                            <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowHeroDetails(_character.Hero)" Icon="list"
+                                          MouseEnter="@(args => ShowTooltip(args, "Show Details"))" Style="margin-right: 1rem; margin-bottom: 0.5rem;" />
+                        </div>
+                        <div class="row d-flex">
+                            <div class="col mr-auto">
+                                Main Class: @_character.MainClass.Name
+                            </div>
+                            <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowClassDetails(_character.MainClass)" Icon="list"
+                                          MouseEnter="@(args => ShowTooltip(args, "Show Details"))" Style="margin-right: 1rem; margin-bottom: 0.5rem;" />
+                        </div>
+                        <div class="row d-flex">
+                            <div class="col mr-auto">
+                                Hybrid Class: @(_character.SecondaryClass is null ? "-" : _character.SecondaryClass.Name)
+                            </div>
+                            <RadzenButton ButtonType="ButtonType.Button" Disabled="_character.SecondaryClass is null"
+                                          Click="() => ShowClassDetails(_character.SecondaryClass)" Icon="list"
+                                          MouseEnter="@(args => ShowTooltip(args, "Show Details"))" Style="margin-right: 1rem; margin-bottom: 0.5rem;" />
+                        </div>
+                    </RadzenCard>
+                </div>
+            </div>
+        </RadzenFieldset>
+    }
+}

@@ -1,0 +1,31 @@
+﻿@page "/Heroes/{Message?}"
+
+@if (_heroes is null)
+{
+    <p>Loading heroes...</p>
+}
+else
+{
+    <RadzenGrid AllowPaging="true" PageSize="20" AllowSorting="true" Data="@_heroes" TItem="Hero" ColumnWidth="100px">
+        <Columns>
+            <RadzenGridColumn TItem="Hero" Property="Archetype" Title="Archetype" />
+            <RadzenGridColumn TItem="Hero" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="Hero" Property="Speed" Title="Speed" />
+            <RadzenGridColumn TItem="Hero" Property="Health" Title="Health" />
+            <RadzenGridColumn TItem="Hero" Property="Stamina" Title="Stamina" />
+            <RadzenGridColumn TItem="Hero" Property="Defense" Title="Defense" />
+            <RadzenGridColumn TItem="Hero" Property="Willpower" Title="Willpower" />
+            <RadzenGridColumn TItem="Hero" Property="Might" Title="Might" />
+            <RadzenGridColumn TItem="Hero" Property="Knowledge" Title="Knowledge" />
+            <RadzenGridColumn TItem="Hero" Property="Awareness" Title="Awareness" />
+            <RadzenGridColumn TItem="Hero" Title="Actions" Sortable="false" Width="135px">
+                <Template Context="hero">
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowHeroDetails(hero)" Icon="list" MouseEnter="@(args => ShowTooltip(args, "Show Details"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => GoToEdit(hero)" Icon="edit" MouseEnter="@(args => ShowTooltip(args, "Edit Hero"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => DeleteHero(hero)" Icon="delete" MouseEnter="@(args => ShowTooltip(args, "Delete Hero"))" />
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+    <AlignedButton Alignment="Alignment.Right" Text="Create Hero" ButtonType="ButtonType.Button" Click="() => GoToCreateHero()" />
+}

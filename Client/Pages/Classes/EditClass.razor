@@ -1,0 +1,28 @@
+﻿@page "/Classes/{id}/Edit"
+
+@if (_class is null)
+{
+    <p>Loading class...</p>
+}
+else
+{
+    <RadzenTemplateForm TItem="Class" Data="@_class" Submit="@Submit">
+        <RadzenFieldset Text="Edit Class">
+            <InputComponent Label="Archetype">
+                <RadzenDropDown @bind-Value="@_class.Archetype" TValue="Archetype" Data="Utility.EnumUtilities.GetArchetypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Name">
+                <RadzenTextBox @bind-Value="@_class.Name" Name="Name" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required." />
+            </InputComponent>
+            <InputComponent Label="Hybris Class">
+                <RadzenCheckBox @bind-Value="@_class.HybridClass" />
+            </InputComponent>
+            <InputComponent Label="Hybrid Archetype">
+                <RadzenDropDown @bind-Value="@_class.HybridArchetype" Disabled="(_class.HybridClass == false)" TValue="Archetype" Data="Utility.EnumUtilities.GetArchetypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
+            </InputComponent>
+            <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Submit" Text="Edit Class" />
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+}
+
