@@ -12,8 +12,6 @@ namespace BlazorApp.Client.Pages.Classes
     public partial class EditClass
     {
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
         public NotificationService NotificationService { get; set; }
@@ -23,18 +21,26 @@ namespace BlazorApp.Client.Pages.Classes
         public string Id { get; set; }
 
         private Class _class;
-        private string _baseUrl;
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
-            await LoadClass(Id);
+            _class = await LoadClass(Id);
         }
 
-        private async Task LoadClass(string id)
+        private async Task<Class> LoadClass(string id)
         {
             var url = $"api/Classes/{id}";
-            _class = await HttpClient.GetFromJsonAsync<Class>(url);
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<Class>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load class.", result.ErrorMessage);
+                return new Class();
+            }
         }
 
         private async Task Submit()
@@ -45,7 +51,7 @@ namespace BlazorApp.Client.Pages.Classes
             var errorOccured = false;
             if (checkNameResult.Success && !checkNameResult.ResultObject)
             {
-                url = $"api/Classes";
+                url = "api/Classes";
                 var editClassResponse = await HttpClient.PutAsJsonAsync(url, _class);
                 if (editClassResponse.IsSuccessStatusCode)
                 {

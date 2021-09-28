@@ -10,6 +10,7 @@ namespace Domain.Enums
     {
         Exception,
         InvalidInput,
-        NotFound
+        NotFound,
+        NotSuccessStatusCode
     }
 }

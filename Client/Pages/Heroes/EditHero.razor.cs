@@ -12,8 +12,6 @@ namespace BlazorApp.Client.Pages.Heroes
     public partial class EditHero
     {
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
         public NotificationService NotificationService { get; set; }
@@ -23,18 +21,26 @@ namespace BlazorApp.Client.Pages.Heroes
         public string Id { get; set; }
 
         private Hero _hero;
-        private string _baseUrl;
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
-            await LoadHero(Id);
+            _hero = await LoadHero(Id);
         }
 
-        private async Task LoadHero(string id)
+        private async Task<Hero> LoadHero(string id)
         {
             var url = $"api/Heroes/{id}";
-            _hero = await HttpClient.GetFromJsonAsync<Hero>(url);
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<Hero>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load hero.", result.ErrorMessage);
+                return new Hero();
+            }
         }
 
         private async Task Submit()
@@ -45,7 +51,7 @@ namespace BlazorApp.Client.Pages.Heroes
             var errorOccured = false;
             if (checkNameResult.Success && !checkNameResult.ResultObject)
             {
-                url = $"api/Heroes";
+                url = "api/Heroes";
                 var editHeroResponse = await HttpClient.PutAsJsonAsync(url, _hero);
                 if (editHeroResponse.IsSuccessStatusCode)
                 {

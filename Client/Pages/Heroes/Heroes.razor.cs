@@ -1,4 +1,5 @@
 ﻿using BlazorApp.Client.Shared;
+using BlazorApp.Client.Utility;
 using Domain.DataTransferObjects;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
@@ -15,8 +16,6 @@ namespace BlazorApp.Client.Pages.Heroes
         [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public DialogService DialogService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -28,11 +27,9 @@ namespace BlazorApp.Client.Pages.Heroes
         public string Message { get; set; }
 
         private IEnumerable<Hero> _heroes;
-        private string _baseUrl;
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
             if (!string.IsNullOrWhiteSpace(Message))
             {
                 NotificationService.Notify(summary: Message);
@@ -42,8 +39,18 @@ namespace BlazorApp.Client.Pages.Heroes
 
         private async Task<List<Hero>> GetHeroes()
         {
-            var url = $"api/Heroes";
-            return await HttpClient.GetFromJsonAsync<List<Hero>>(url);
+            var url = "api/Heroes";
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<List<Hero>>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load heroes.", result.ErrorMessage);
+                return new List<Hero>();
+            }
         }
 
         private void GoToCreateHero()
@@ -70,9 +77,9 @@ namespace BlazorApp.Client.Pages.Heroes
                 var deleteHeroResponse = await HttpClient.DeleteAsync(url);
                 if (deleteHeroResponse.IsSuccessStatusCode)
                 {
+                    NotificationService.Notify(NotificationSeverity.Info, "The hero was deleted.");
                     _heroes = await GetHeroes();
                     StateHasChanged();
-                    NotificationService.Notify(NotificationSeverity.Info, "The hero was deleted.");
                 }
                 else
                 {

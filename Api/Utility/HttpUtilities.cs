@@ -18,7 +18,12 @@ namespace Api.Utility
             {
                 using StreamReader streamReader = new StreamReader(req.Body);
                 string body = await streamReader.ReadToEndAsync();
-                T model = JsonSerializer.Deserialize<T>(body);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+                T model = JsonSerializer.Deserialize<T>(body, options);
                 return new Result<T>(model, true);
             }
             catch (Exception)

@@ -13,8 +13,6 @@ namespace BlazorApp.Client.Pages.Classes
     public partial class CreateClass
     {
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
         public NotificationService NotificationService { get; set; }
@@ -22,12 +20,6 @@ namespace BlazorApp.Client.Pages.Classes
         public NavigationManager NavigationManager { get; set; }
 
         private readonly Class _class = new() { Id = Guid.NewGuid() };
-        private string _baseUrl;
-
-        protected override async Task OnInitializedAsync()
-        {
-            _baseUrl = Configuration.GetConnectionString("API");
-        }
 
         private async Task Submit()
         {
@@ -39,7 +31,7 @@ namespace BlazorApp.Client.Pages.Classes
                 var errorOccured = false;
                 if (checkNameResult.Success && !checkNameResult.ResultObject)
                 {
-                    url = $"api/Classes";
+                    url = "api/Classes";
                     var createClassResponse = await HttpClient.PostAsJsonAsync(url, _class);
                     if (createClassResponse.IsSuccessStatusCode)
                     {

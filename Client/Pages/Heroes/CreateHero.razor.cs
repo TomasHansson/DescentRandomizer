@@ -13,8 +13,6 @@ namespace BlazorApp.Client.Pages.Heroes
     public partial class CreateHero
     {
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
         public NotificationService NotificationService { get; set; }
@@ -22,12 +20,6 @@ namespace BlazorApp.Client.Pages.Heroes
         public NavigationManager NavigationManager { get; set; }
 
         private readonly Hero _hero = new() { Id = Guid.NewGuid() };
-        private string _baseUrl;
-
-        protected override async Task OnInitializedAsync()
-        {
-            _baseUrl = Configuration.GetConnectionString("API");
-        }
 
         private async Task Submit()
         {
@@ -39,7 +31,7 @@ namespace BlazorApp.Client.Pages.Heroes
                 var errorOccured = false;
                 if (checkNameResult.Success && !checkNameResult.ResultObject)
                 {
-                    url = $"api/Heroes";
+                    url = "api/Heroes";
                     var createHeroResponse = await HttpClient.PostAsJsonAsync(url, _hero);
                     if (createHeroResponse.IsSuccessStatusCode)
                     {

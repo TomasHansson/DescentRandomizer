@@ -1,4 +1,5 @@
 ﻿using BlazorApp.Client.Shared;
+using BlazorApp.Client.Utility;
 using Domain.DataTransferObjects;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
@@ -15,8 +16,6 @@ namespace BlazorApp.Client.Pages.Classes
         [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public DialogService DialogService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -28,11 +27,9 @@ namespace BlazorApp.Client.Pages.Classes
         public string Message { get; set; }
 
         private IEnumerable<Class> _classes;
-        private string _baseUrl;
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
             if (!string.IsNullOrWhiteSpace(Message))
             {
                 NotificationService.Notify(summary: Message);
@@ -42,8 +39,18 @@ namespace BlazorApp.Client.Pages.Classes
 
         private async Task<List<Class>> GetClasses()
         {
-            var url = $"api/Classes/All/true";
-            return await HttpClient.GetFromJsonAsync<List<Class>>(url);
+            var url = "api/Classes/All/true";
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<List<Class>>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load classes.", result.ErrorMessage);
+                return new List<Class>();
+            }
         }
 
         private void GoToCreateClass()
@@ -70,9 +77,9 @@ namespace BlazorApp.Client.Pages.Classes
                 var deleteClassResponse = await HttpClient.DeleteAsync(url);
                 if (deleteClassResponse.IsSuccessStatusCode)
                 {
+                    NotificationService.Notify(NotificationSeverity.Info, "The class was deleted.");
                     _classes = await GetClasses();
                     StateHasChanged();
-                    NotificationService.Notify(NotificationSeverity.Info, "The class was deleted.");
                 }
                 else
                 {

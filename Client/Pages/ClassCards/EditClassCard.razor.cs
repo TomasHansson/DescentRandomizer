@@ -13,8 +13,6 @@ namespace BlazorApp.Client.Pages.ClassCards
     public partial class EditClassCard
     {
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
         public NotificationService NotificationService { get; set; }
@@ -25,25 +23,43 @@ namespace BlazorApp.Client.Pages.ClassCards
 
         private ClassCard _classCard;
         private IEnumerable<Class> _classes;
-        private string _baseUrl;
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
-            await LoadClassCard(Id);
+            _classCard = await LoadClassCard(Id);
             _classes = await GetClassesWithoutClassCards();
         }
 
-        private async Task LoadClassCard(string id)
+        private async Task<ClassCard> LoadClassCard(string id)
         {
             var url = $"api/ClassCards/{id}";
-            _classCard = await HttpClient.GetFromJsonAsync<ClassCard>(url);
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<ClassCard>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load class card.", result.ErrorMessage);
+                return new ClassCard();
+            }
         }
 
         private async Task<List<Class>> GetClassesWithoutClassCards()
         {
-            var url = $"api/Classes/All/false";
-            return await HttpClient.GetFromJsonAsync<List<Class>>(url);
+            var url = "api/Classes/All/false";
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<List<Class>>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load classes.", result.ErrorMessage);
+                return new List<Class>();
+            }
         }
 
         private async Task Submit()
@@ -54,7 +70,7 @@ namespace BlazorApp.Client.Pages.ClassCards
             var errorOccured = false;
             if (checkNameResult.Success && !checkNameResult.ResultObject)
             {
-                url = $"api/ClassCards";
+                url = "api/ClassCards";
                 var editClassCardResponse = await HttpClient.PutAsJsonAsync(url, _classCard);
                 if (editClassCardResponse.IsSuccessStatusCode)
                 {

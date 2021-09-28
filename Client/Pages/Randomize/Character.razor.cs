@@ -1,4 +1,5 @@
 ﻿using BlazorApp.Client.Shared;
+using BlazorApp.Client.Utility;
 using Domain.DataTransferObjects;
 using Domain.Enums;
 using Domain.Models;
@@ -19,8 +20,6 @@ namespace BlazorApp.Client.Pages.Randomize
         [Inject]
         public HttpClient HttpClient { get; set; }
         [Inject]
-        public IConfiguration Configuration { get; set; }
-        [Inject]
         public DialogService DialogService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -32,27 +31,45 @@ namespace BlazorApp.Client.Pages.Randomize
         private readonly RandomCharacterRequest _request = new();
         private IEnumerable<Hero> _heroes;
         private IEnumerable<Class> _classes;
-        private string _baseUrl;
         private readonly Random _randomizer = new();
         private Domain.Models.Character _character = new();
 
         protected override async Task OnInitializedAsync()
         {
-            _baseUrl = Configuration.GetConnectionString("API");
             _heroes = await GetHeroes();
             _classes = await GetClasses();
         }
 
         private async Task<List<Hero>> GetHeroes()
         {
-            var url = $"api/Heroes";
-            return await HttpClient.GetFromJsonAsync<List<Hero>>(url);
+            var url = "api/Heroes";
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<List<Hero>>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load heroes.", result.ErrorMessage);
+                return new List<Hero>();
+            }
         }
 
         private async Task<List<Class>> GetClasses()
         {
-            var url = $"api/Classes/All/true";
-            return await HttpClient.GetFromJsonAsync<List<Class>>(url);
+            var url = "api/Classes/All/true";
+            var response = await HttpClient.GetAsync(url);
+            var result = await HttpUtilities.TryParseJsonResponse<List<Class>>(response);
+            if (result.Success)
+            {
+                return result.ResultObject;
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Unable to load classes.", result.ErrorMessage);
+                return new List<Class>();
+            }
         }
 
         private void Submit()
