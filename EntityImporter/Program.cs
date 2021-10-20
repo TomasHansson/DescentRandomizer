@@ -18,13 +18,14 @@ namespace EntityImporter
         static async Task Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            // Insert ConnectionString below and activate the relevant functions whenever importing is required.
         }
 
         private static IOptions<TableStorageOptions> GetTableStorageOptions()
         {
             var tableStorageOptions = new TableStorageOptions
             {
-                ConnectionString = "DefaultEndpointsProtocol=https;AccountName=descentrandomizerstorage;AccountKey=omeiKXfJIFZ4K9sinhbtFnoMp1Qq48s3u6CJbfKXO5g5QFKSlSTiENcA3MLxlCGhq3NA5FATducnmQkDVcbxXw==;EndpointSuffix=core.windows.net",
+                ConnectionString = "",
                 HeroesTable = "heroes",
                 ClassesTable = "classes",
                 ClassCardsTable = "classcards",
