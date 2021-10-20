@@ -1,4 +1,5 @@
-﻿@page "/ClassCards/{Message?}"
+﻿@page "/ClassCards"
+@attribute [Authorize]
 
 @if (_classCards is null)
 {

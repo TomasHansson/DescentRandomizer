@@ -1,0 +1,25 @@
+﻿@page "/Login"
+
+<AuthorizeView>
+    <Authorized>
+        <h2>You're already logged in.</h2>
+    </Authorized>
+    <NotAuthorized>
+        <RadzenTemplateForm TItem="Authorization" Data="@_authorization" Submit="@Authorize">
+            <ChildContent Context="templateContext">
+                <RadzenFieldset Text="Authorize">
+                    <InputComponent Label="Username">
+                        <RadzenTextBox @bind-Value="@_authorization.Username" Name="Username" Style="width: 100%" />
+                        <RadzenRequiredValidator Component="Username" Text="Username is required." />
+                    </InputComponent>
+                    <InputComponent Label="Password">
+                        <RadzenPassword @bind-Value="@_authorization.Password" Name="Password" Style="width: 100%" />
+                        <RadzenRequiredValidator Component="Password" Text="Password is required." />
+                    </InputComponent>
+                    <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Submit" Text="Login" />
+                </RadzenFieldset>
+            </ChildContent>
+        </RadzenTemplateForm>
+    </NotAuthorized>
+</AuthorizeView>
+

@@ -23,17 +23,11 @@ namespace BlazorApp.Client.Pages.Heroes
         public NotificationService NotificationService { get; set; }
         [Inject]
         public TooltipService TooltipService { get; set; }
-        [Parameter]
-        public string Message { get; set; }
 
         private IEnumerable<Hero> _heroes;
 
         protected override async Task OnInitializedAsync()
         {
-            if (!string.IsNullOrWhiteSpace(Message))
-            {
-                NotificationService.Notify(summary: Message);
-            }
             _heroes = await GetHeroes();
         }
 

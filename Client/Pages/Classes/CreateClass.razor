@@ -1,4 +1,5 @@
 ﻿@page "/Classes/Create"
+@attribute [Authorize]
 
 <RadzenTemplateForm TItem="Class" Data="@_class" Submit="@Submit">
     <RadzenFieldset Text="Create New Class">

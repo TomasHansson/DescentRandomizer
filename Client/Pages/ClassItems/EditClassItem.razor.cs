@@ -88,7 +88,8 @@ namespace BlazorApp.Client.Pages.ClassItems
                 var editClassCardResponse = await HttpClient.PutAsJsonAsync(url, _classItem);
                 if (editClassCardResponse.IsSuccessStatusCode)
                 {
-                    NavigationManager.NavigateTo("/ClassItems/Class item was edited succesfully.");
+                    NotificationService.Notify(NotificationSeverity.Success, "Class item was edited succesfully.");
+                    NavigationManager.NavigateTo("/ClassItems");
                 }
                 else
                 {

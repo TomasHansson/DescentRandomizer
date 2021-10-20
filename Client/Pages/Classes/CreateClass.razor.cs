@@ -35,7 +35,8 @@ namespace BlazorApp.Client.Pages.Classes
                     var createClassResponse = await HttpClient.PostAsJsonAsync(url, _class);
                     if (createClassResponse.IsSuccessStatusCode)
                     {
-                        NavigationManager.NavigateTo("/Classes/Class was created succesfully.");
+                        NotificationService.Notify(NotificationSeverity.Success, "Class was created succesfully.");
+                        NavigationManager.NavigateTo("/Classes");
                     }
                     else
                     {

@@ -23,17 +23,11 @@ namespace BlazorApp.Client.Pages.Classes
         public NotificationService NotificationService { get; set; }
         [Inject]
         public TooltipService TooltipService { get; set; }
-        [Parameter]
-        public string Message { get; set; }
 
         private IEnumerable<Class> _classes;
 
         protected override async Task OnInitializedAsync()
         {
-            if (!string.IsNullOrWhiteSpace(Message))
-            {
-                NotificationService.Notify(summary: Message);
-            }
             _classes = await GetClasses();
         }
 

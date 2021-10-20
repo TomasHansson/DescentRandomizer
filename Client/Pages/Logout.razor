@@ -1,0 +1,12 @@
+﻿@page "/Logout"
+
+<RadzenFieldset Text="Signout">
+    <AuthorizeView>
+        <Authorized>
+            <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Button" Click="LogoutUser" Text="Logout" />
+        </Authorized>
+        <NotAuthorized>
+            <h2>You're not logged in.</h2>
+        </NotAuthorized>
+    </AuthorizeView>
+</RadzenFieldset>

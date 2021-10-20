@@ -1,4 +1,5 @@
 ﻿@page "/Heroes/Create"
+@attribute [Authorize]
 
 <RadzenTemplateForm TItem="Hero" Data="@_hero" Submit="@Submit">
     <RadzenFieldset Text="Create New Hero">

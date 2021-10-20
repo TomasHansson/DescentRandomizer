@@ -71,7 +71,8 @@ namespace BlazorApp.Client.Pages.ClassItems
                     var createClassCardResponse = await HttpClient.PostAsJsonAsync(url, _classItem);
                     if (createClassCardResponse.IsSuccessStatusCode)
                     {
-                        NavigationManager.NavigateTo("/ClassItems/Class card was created succesfully.");
+                        NotificationService.Notify(NotificationSeverity.Success, "Class item was created succesfully.");
+                        NavigationManager.NavigateTo("/ClassItems");
                     }
                     else
                     {

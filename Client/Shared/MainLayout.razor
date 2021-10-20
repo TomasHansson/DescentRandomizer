@@ -24,14 +24,22 @@
     <br />
     <RadzenPanelMenu>
         <RadzenPanelMenuItem Text="Administration">
-            <RadzenPanelMenuItem Text="Heroes" Path="/Heroes" Icon="account_circle" />
-            <RadzenPanelMenuItem Text="Classes" Path="/Classes" Icon="account_circle" />
-            <RadzenPanelMenuItem Text="Class Cards" Path="/ClassCards" Icon="account_circle" />
-            <RadzenPanelMenuItem Text="Class Items" Path="/ClassItems" Icon="account_circle" />
+            <AuthorizeView>
+                <Authorized>
+                    <RadzenPanelMenuItem Text="Heroes" Path="/Heroes" Icon="face" />
+                    <RadzenPanelMenuItem Text="Classes" Path="/Classes" Icon="account_circle" />
+                    <RadzenPanelMenuItem Text="Class Cards" Path="/ClassCards" Icon="style" />
+                    <RadzenPanelMenuItem Text="Class Items" Path="/ClassItems" Icon="work" />
+                    <RadzenPanelMenuItem Text="Logout" Path="/Logout" Icon="logout" />
+                </Authorized>
+                <NotAuthorized>
+                    <RadzenPanelMenuItem Text="Login" Path="/Login" Icon="login" />
+                </NotAuthorized>
+            </AuthorizeView>
         </RadzenPanelMenuItem>
         <RadzenPanelMenuItem Text="Randomizer">
-            <RadzenPanelMenuItem Text="Single Character" Path="/Randomize/Character" Icon="account_circle" />
-            <RadzenPanelMenuItem Text="Full Party" Path="/Randomize/Party" Icon="account_circle" />
+            <RadzenPanelMenuItem Text="Single Character" Path="/Randomize/Character" Icon="person" />
+            <RadzenPanelMenuItem Text="Full Party" Path="/Randomize/Party" Icon="groups" />
         </RadzenPanelMenuItem>
     </RadzenPanelMenu>
 </RadzenSidebar>

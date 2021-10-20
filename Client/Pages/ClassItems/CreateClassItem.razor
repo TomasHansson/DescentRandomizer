@@ -1,5 +1,5 @@
 ﻿@page "/ClassItems/Create"
-
+@attribute [Authorize]
 
 @if (_classes is null)
 {
@@ -28,11 +28,11 @@ else
                 <RadzenDropDown @bind-Value="@_classItem.EquipType" TValue="EquipType" Data="Utility.EnumUtilities.GetEquipTypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
             </InputComponent>
             <InputComponent Label="Weapon Type">
-                <RadzenDropDown @bind-Value="@_classItem.WeaponType" TValue="WeaponType" Data="Utility.EnumUtilities.GetWeaponTypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" 
+                <RadzenDropDown @bind-Value="@_classItem.WeaponType" TValue="WeaponType" Data="Utility.EnumUtilities.GetWeaponTypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%"
                                 Disabled="@(_classItem.EquipType != EquipType.OneHand && _classItem.EquipType != EquipType.TwoHands)" />
             </InputComponent>
             <InputComponent Label="Power Die">
-                <RadzenDropDown @bind-Value="@_classItem.PowerDie" TValue="PowerDie" Data="Utility.EnumUtilities.GetPowerDices()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" 
+                <RadzenDropDown @bind-Value="@_classItem.PowerDie" TValue="PowerDie" Data="Utility.EnumUtilities.GetPowerDices()" TextProperty="Name" ValueProperty="Value" Style="width: 100%"
                                 Disabled="@(_classItem.EquipType != EquipType.OneHand && _classItem.EquipType != EquipType.TwoHands)" />
             </InputComponent>
             <InputComponent Label="Text">

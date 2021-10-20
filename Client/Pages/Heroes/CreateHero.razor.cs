@@ -35,7 +35,8 @@ namespace BlazorApp.Client.Pages.Heroes
                     var createHeroResponse = await HttpClient.PostAsJsonAsync(url, _hero);
                     if (createHeroResponse.IsSuccessStatusCode)
                     {
-                        NavigationManager.NavigateTo("/Heroes/Hero was created succesfully.");
+                        NotificationService.Notify(NotificationSeverity.Success, "Hero was created succesfully..");
+                        NavigationManager.NavigateTo("/Heroes");
                     }
                     else
                     {

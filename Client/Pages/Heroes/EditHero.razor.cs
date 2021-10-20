@@ -55,7 +55,8 @@ namespace BlazorApp.Client.Pages.Heroes
                 var editHeroResponse = await HttpClient.PutAsJsonAsync(url, _hero);
                 if (editHeroResponse.IsSuccessStatusCode)
                 {
-                    NavigationManager.NavigateTo("/Heroes/Hero was edited succesfully.");
+                    NotificationService.Notify(NotificationSeverity.Success, "Hero was edited succesfully.");
+                    NavigationManager.NavigateTo("/Heroes");
                 }
                 else
                 {
