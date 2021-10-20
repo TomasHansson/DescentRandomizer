@@ -14,7 +14,7 @@ namespace DataAccess.DataAccessObjects
         public Guid ClassId { get; set; }
         public string Name { get; set; }
         public int ExperienceCost { get; set; }
-        public int PlayCost { get; set; }
+        public string PlayCost { get; set; }
         public string Text { get; set; }
 
         public ClassCard ConvertToClassCard()

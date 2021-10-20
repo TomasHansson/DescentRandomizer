@@ -12,11 +12,42 @@
         <p>Hybrid Archetype: @(Class.HybridClass ? Class.HybridArchetype.ToString() : "-")</p>
     </div>
     <div class="col-12 pt-1 text-center">
+        <p>Class Items</p>
+    </div>
+    @if (Class.ClassItems != null && Class.ClassItems.Any())
+    {
+        foreach (var classItem in Class.ClassItems)
+        {
+            <div class="col-6">
+                <p>@classItem.Name</p>
+                <p>Traits: @classItem.Traits</p>
+                <p>
+                    Equip: @(classItem.EquipType switch
+                    {
+                        EquipType.OneHand => "One Hand",
+                        EquipType.TwoHands => "Two Hands",
+                        EquipType.Other => "Other",
+                        EquipType.Armor => "Armor"
+                    })
+                </p>
+                <p>Weapon: @(classItem.WeaponType == WeaponType.None ? "-" : classItem.WeaponType.ToString())</p>
+                <p>Dice: @(classItem.WeaponType == WeaponType.None ? "-" : $"Blue {classItem.PowerDie}")</p>
+                <p>@classItem.Text</p>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 pt-1">
+            <p>This class doesn't have any class items assigned to it.</p>
+        </div>
+    }
+    <div class="col-12 pt-1 text-center">
         <p>Class Cards</p>
     </div>
     @if (Class.ClassCards != null && Class.ClassCards.Any())
     {
-        foreach (var classCard in Class.ClassCards)
+        foreach (var classCard in Class.ClassCards.OrderBy(x => x.ExperienceCost).ThenBy(x => x.Name))
         {
             <div class="col-6">
                 <p>@classCard.Name</p>
@@ -28,8 +59,8 @@
     }
     else
     {
-        <div class=" col-12 pt-1">
-            <p>This class doesn't have any cards assigned to it.</p>
+        <div class="col-12 pt-1">
+            <p>This class doesn't have any class cards assigned to it.</p>
         </div>
     }
     <div class="col-12 pt-1">

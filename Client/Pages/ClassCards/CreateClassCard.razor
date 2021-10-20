@@ -24,7 +24,8 @@ else
                 <RadzenNumeric @bind-Value="@_classCard.ExperienceCost" Min="0" Max="10" Style="width: 100%" />
             </InputComponent>
             <InputComponent Label="Play Cost">
-                <RadzenNumeric @bind-Value="@_classCard.PlayCost" Min="0" Max="10" Style="width: 100%" />
+                <RadzenTextBox @bind-Value="@_classCard.PlayCost" Name="Play Cost" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Play Cost" Text="Play Cost is required." />
             </InputComponent>
             <InputComponent Label="Text">
                 <RadzenTextArea @bind-Value="@_classCard.Text" Name="Text" Style="width: 100%" />

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{CEC27537-36DB-4AD2-BD77-55E0E7D766F9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityImporter", "EntityImporter\EntityImporter.csproj", "{17E2221B-3BB1-4B68-8BE1-BE155D1E9AC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CEC27537-36DB-4AD2-BD77-55E0E7D766F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEC27537-36DB-4AD2-BD77-55E0E7D766F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEC27537-36DB-4AD2-BD77-55E0E7D766F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E2221B-3BB1-4B68-8BE1-BE155D1E9AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E2221B-3BB1-4B68-8BE1-BE155D1E9AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E2221B-3BB1-4B68-8BE1-BE155D1E9AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E2221B-3BB1-4B68-8BE1-BE155D1E9AC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

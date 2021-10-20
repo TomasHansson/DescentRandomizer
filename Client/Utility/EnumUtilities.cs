@@ -49,6 +49,51 @@ namespace BlazorApp.Client.Utility
             }
             return _criterias;
         }
+
+        private static List<EquipTypeItem> _equipTypes;
+        public static List<EquipTypeItem> GetEquipTypes()
+        {
+            if (_equipTypes is null)
+            {
+                _equipTypes = new List<EquipTypeItem>
+                {
+                    new EquipTypeItem { Name = "One Hands", Value = EquipType.OneHand },
+                    new EquipTypeItem { Name = "Two Hands", Value = EquipType.TwoHands },
+                    new EquipTypeItem { Name = "Other", Value = EquipType.Other },
+                    new EquipTypeItem { Name = "Armor", Value = EquipType.Armor }
+                };
+            }
+            return _equipTypes;
+        }
+
+        private static List<PowerDieItem> _powerDices;
+        public static List<PowerDieItem> GetPowerDices()
+        {
+            if (_powerDices is null)
+            {
+                _powerDices = new List<PowerDieItem>
+                {
+                    new PowerDieItem { Name = "Green", Value = PowerDie.Green },
+                    new PowerDieItem { Name = "Yellow", Value = PowerDie.Yellow },
+                    new PowerDieItem { Name = "Red", Value = PowerDie.Red }
+                };
+            }
+            return _powerDices;
+        }
+
+        private static List<WeaponTypeItem> _weaponTypes;
+        public static List<WeaponTypeItem> GetWeaponTypes()
+        {
+            if (_weaponTypes is null)
+            {
+                _weaponTypes = new List<WeaponTypeItem>
+                {
+                    new WeaponTypeItem { Name = "Melee", Value = WeaponType.Melee },
+                    new WeaponTypeItem { Name = "Ranged", Value = WeaponType.Ranged }
+                };
+            }
+            return _weaponTypes;
+        }
     }
 
     public class ArchetypeItem
@@ -67,5 +112,23 @@ namespace BlazorApp.Client.Utility
     {
         public string Name { get; set; }
         public Criteria Value { get; set; }
+    }
+
+    public class EquipTypeItem
+    {
+        public string Name { get; set; }
+        public EquipType Value { get; set; }
+    }
+
+    public class PowerDieItem
+    {
+        public string Name { get; set; }
+        public PowerDie Value { get; set; }
+    }
+
+    public class WeaponTypeItem
+    {
+        public string Name { get; set; }
+        public WeaponType Value { get; set; }
     }
 }

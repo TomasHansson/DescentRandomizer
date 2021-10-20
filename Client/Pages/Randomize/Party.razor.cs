@@ -92,19 +92,18 @@ namespace BlazorApp.Client.Pages.Randomize
                 }
                 int index = randomizer.Next(0, validHeroSelections.Count);
                 var hero = validHeroSelections[index];
-                validArchetypes = validArchetypes.Where(x => x == hero.Archetype).ToList();
-                var validClassSelections = ValidClassSelections(selectedCombinations, validArchetypes);
-                if (validClassSelections.Count == 0)
+                var validMainClassSelections = ValidMainClassSelections(selectedCombinations, hero);
+                if (validMainClassSelections.Count == 0)
                 {
                     NotifyUnableToBuildPartyBasesOnFilters();
                     return;
                 }
-                index = randomizer.Next(0, validClassSelections.Count);
-                var mainClass = validClassSelections[index];
+                index = randomizer.Next(0, validMainClassSelections.Count);
+                var mainClass = validMainClassSelections[index];
                 Class secondaryClass = null;
                 if (mainClass.HybridClass)
                 {
-                    var validSecondaryClasses = validClassSelections.Where(x => !x.HybridClass && x.Archetype == mainClass.HybridArchetype).ToList();
+                    var validSecondaryClasses = ValidSecondaryClassSelections(selectedCombinations, mainClass);
                     index = randomizer.Next(0, validSecondaryClasses.Count);
                     secondaryClass = validSecondaryClasses[index];
                 }
@@ -121,10 +120,12 @@ namespace BlazorApp.Client.Pages.Randomize
 
         private List<Archetype> ValidArchetypes(List<Domain.Models.Character> selectedCombinations)
         {
-            var remainingHeroes = _heroes.Where(x => selectedCombinations.Any(y => y.Hero == x) == false);
-            remainingHeroes = remainingHeroes.Where(x => _request.HeroesToExclude.Contains(x.Id) == false);
-            var remainingClasses = _classes.Where(x => selectedCombinations.Any(y => y.MainClass == x || y.SecondaryClass == x) == false);
-            remainingClasses = remainingClasses.Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
+            var remainingHeroes = _heroes
+                .Where(x => selectedCombinations.Any(y => y.Hero == x) == false)
+                .Where(x => _request.HeroesToExclude.Contains(x.Id) == false);
+            var remainingClasses = _classes
+                .Where(x => selectedCombinations.Any(y => y.MainClass == x || y.SecondaryClass == x) == false)
+                .Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
             if (_request.AllowHybridClasses == false)
             {
                 remainingClasses = remainingClasses.Where(x => x.HybridClass == false);
@@ -157,9 +158,10 @@ namespace BlazorApp.Client.Pages.Randomize
 
         private List<Hero> ValidHeroSelections(List<Domain.Models.Character> selectedCombinations, List<Archetype> validArchetypes)
         {
-            var validHeroSelections = _heroes.Where(x => selectedCombinations.Any(y => y.Hero == x) == false);
-            validHeroSelections = validHeroSelections.Where(x => validArchetypes.Contains(x.Archetype));
-            validHeroSelections = validHeroSelections.Where(x => _request.HeroesToExclude.Contains(x.Id) == false);
+            var validHeroSelections = _heroes
+                .Where(x => selectedCombinations.Any(y => y.Hero == x) == false)
+                .Where(x => validArchetypes.Contains(x.Archetype))
+                .Where(x => _request.HeroesToExclude.Contains(x.Id) == false);
             if (_request.Criteria == Criteria.MaxXOfEachArchetype)
             {
                 foreach (Archetype archetype in Enum.GetValues(typeof(Archetype)))
@@ -173,11 +175,12 @@ namespace BlazorApp.Client.Pages.Randomize
             return validHeroSelections.ToList();
         }
 
-        private List<Class> ValidClassSelections(List<Domain.Models.Character> selectedCombinations, List<Archetype> validArchetypes)
+        private List<Class> ValidMainClassSelections(List<Domain.Models.Character> selectedCombinations, Hero hero)
         {
-            var validClassSelections = _classes.Where(x => selectedCombinations.Any(y => y.MainClass == x || y.SecondaryClass == x) == false);
-            validClassSelections = validClassSelections.Where(x => validArchetypes.Contains(x.Archetype));
-            validClassSelections = validClassSelections.Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
+            var validClassSelections = _classes
+                .Where(x => selectedCombinations.Any(y => y.MainClass == x || y.SecondaryClass == x) == false)
+                .Where(x => x.Archetype == hero.Archetype)
+                .Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
             if (_request.Criteria == Criteria.MaxXOfEachArchetype)
             {
                 foreach (Archetype archetype in Enum.GetValues(typeof(Archetype)))
@@ -193,6 +196,16 @@ namespace BlazorApp.Client.Pages.Randomize
                 validClassSelections = validClassSelections.Where(x => x.HybridClass == false);
             }
             return validClassSelections.ToList();
+        }
+
+        private List<Class> ValidSecondaryClassSelections(List<Domain.Models.Character> selectedCombinations, Class mainClass)
+        {
+            return _classes
+                .Where(x => selectedCombinations.Any(y => y.MainClass == x || y.SecondaryClass == x) == false)
+                .Where(x => _request.ClassesToExclude.Contains(x.Id) == false)
+                .Where(x => x.Archetype == mainClass.HybridArchetype)
+                .Where(x => x.HybridClass == false)
+                .ToList();
         }
 
         private void ShowTooltip(ElementReference elementReference, string text)

@@ -46,6 +46,18 @@ namespace DataAccess.Repositories
             return table;
         }
 
+        private CloudTable GetClassItemCloudTable()
+        {
+            // PartitionKey: ClassId.ToString()
+            // RowKey: Id.ToString()
+            var connectionString = _options.ConnectionString;
+            var tableName = _options.ClassItemsTable;
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+            CloudTable table = tableClient.GetTableReference(tableName);
+            return table;
+        }
+
         public async Task<Result<List<Class>>> GetAll(bool includeClassCards = true)
         {
             try
@@ -66,13 +78,19 @@ namespace DataAccess.Repositories
                 } while (continuationToken != null);
                 if (includeClassCards)
                 {
+                    var cardsTable = GetClassCardCloudTable();
+                    var itemsTable = GetClassItemCloudTable();
                     foreach (var currentClass in classes)
                     {
-                        var cardsTable = GetClassCardCloudTable();
-                        var filter = TableQuery.GenerateFilterCondition(nameof(ClassCardTableEntity.PartitionKey), QueryComparisons.Equal, currentClass.Id.ToString());
-                        var cardsQuery = new TableQuery<ClassCardTableEntity>().Where(filter);
+                        var cardsFilter = TableQuery.GenerateFilterCondition(nameof(ClassCardTableEntity.PartitionKey), QueryComparisons.Equal, currentClass.Id.ToString());
+                        var cardsQuery = new TableQuery<ClassCardTableEntity>().Where(cardsFilter);
                         var classCards = cardsTable.ExecuteQuery(cardsQuery).ToList();
                         currentClass.ClassCards = classCards.Select(x => x.ConvertToClassCard()).ToList();
+
+                        var itemsFilter = TableQuery.GenerateFilterCondition(nameof(ClassItemTableEntity.PartitionKey), QueryComparisons.Equal, currentClass.Id.ToString());
+                        var itemsQuery = new TableQuery<ClassItemTableEntity>().Where(cardsFilter);
+                        var classItems = itemsTable.ExecuteQuery(itemsQuery).ToList();
+                        currentClass.ClassItems = classItems.Select(x => x.ConvertToClassItem()).ToList();
                     }
                 }
                 return new Result<List<Class>>(classes, true);

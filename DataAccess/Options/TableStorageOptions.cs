@@ -10,5 +10,7 @@ namespace DataAccess.Options
         public string HeroesTable { get; set; }
         public string ClassesTable { get; set; }
         public string ClassCardsTable { get; set; }
+        public string ClassItemsTable { get; set; }
+        public string UsersTable { get; set; }
     }
 }

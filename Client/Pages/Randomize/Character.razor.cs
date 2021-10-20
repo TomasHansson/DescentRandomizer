@@ -78,30 +78,29 @@ namespace BlazorApp.Client.Pages.Randomize
             var validArchetypes = ValidArchetypes();
             if (validArchetypes.Count == 0)
             {
-                NotifyUnableToBuildPartyBasesOnFilters();
+                NotifyUnableToBuildCharacterBasesOnFilters();
                 return;
             }
             var validHeroSelections = ValidHeroSelections(validArchetypes);
             if (validHeroSelections.Count == 0)
             {
-                NotifyUnableToBuildPartyBasesOnFilters();
+                NotifyUnableToBuildCharacterBasesOnFilters();
                 return;
             }
             int index = _randomizer.Next(0, validHeroSelections.Count);
             var hero = validHeroSelections[index];
-            validArchetypes = validArchetypes.Where(x => x == hero.Archetype).ToList();
-            var validClassSelections = ValidClassSelections(validArchetypes);
-            if (validClassSelections.Count == 0)
+            var validMainClassSelections = ValidMainClassSelections(hero);
+            if (validMainClassSelections.Count == 0)
             {
-                NotifyUnableToBuildPartyBasesOnFilters();
+                NotifyUnableToBuildCharacterBasesOnFilters();
                 return;
             }
-            index = _randomizer.Next(0, validClassSelections.Count);
-            var mainClass = validClassSelections[index];
+            index = _randomizer.Next(0, validMainClassSelections.Count);
+            var mainClass = validMainClassSelections[index];
             Class secondaryClass = null;
             if (mainClass.HybridClass)
             {
-                var validSecondaryClasses = validClassSelections.Where(x => !x.HybridClass && x.Archetype == mainClass.HybridArchetype).ToList();
+                var validSecondaryClasses = ValidSecondaryClassSelections(mainClass);
                 index = _randomizer.Next(0, validSecondaryClasses.Count);
                 secondaryClass = validSecondaryClasses[index];
             }
@@ -109,7 +108,7 @@ namespace BlazorApp.Client.Pages.Randomize
             _character = new Domain.Models.Character { Hero = hero, MainClass = mainClass, SecondaryClass = secondaryClass };
         }
 
-        private void NotifyUnableToBuildPartyBasesOnFilters()
+        private void NotifyUnableToBuildCharacterBasesOnFilters()
         {
             NotificationService.Notify(summary: "There are no combinations of heroes and classes in the database that would build a character with your current filters.");
         }
@@ -134,7 +133,7 @@ namespace BlazorApp.Client.Pages.Randomize
                     else if (remainingClasses.Where(x => x.Archetype == archetype).All(x => x.HybridClass))
                     {
                         var subClassArchetypes = remainingClasses.Where(x => x.Archetype == archetype).Select(x => x.HybridArchetype).ToList();
-                        if (remainingClasses.Where(x => x.Archetype != archetype).Any(x => subClassArchetypes.Contains(x.Archetype)))
+                        if (remainingClasses.Where(x => x.Archetype != archetype && x.HybridClass == false).Any(x => subClassArchetypes.Contains(x.Archetype)))
                         {
                             result.Add(archetype);
                         }
@@ -150,20 +149,31 @@ namespace BlazorApp.Client.Pages.Randomize
 
         private List<Hero> ValidHeroSelections(List<Archetype> validArchetypes)
         {
-            var validHeroSelections = _heroes.Where(x => validArchetypes.Contains(x.Archetype));
-            validHeroSelections = validHeroSelections.Where(x => _request.HeroesToExclude.Contains(x.Id) == false);
-            return validHeroSelections.ToList();
+            return _heroes
+                .Where(x => validArchetypes.Contains(x.Archetype))
+                .Where(x => _request.HeroesToExclude.Contains(x.Id) == false)
+                .ToList();
         }
 
-        private List<Class> ValidClassSelections(List<Archetype> validArchetypes)
+        private List<Class> ValidMainClassSelections(Hero hero)
         {
-            var validClassSelections = _classes.Where(x => validArchetypes.Contains(x.Archetype));
-            validClassSelections = validClassSelections.Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
+            var validMainClassSelections = _classes
+                .Where(x => x.Archetype == hero.Archetype)
+                .Where(x => _request.ClassesToExclude.Contains(x.Id) == false);
             if (_request.AllowHybridClasses == false)
             {
-                validClassSelections = validClassSelections.Where(x => x.HybridClass == false);
+                validMainClassSelections = validMainClassSelections.Where(x => x.HybridClass == false);
             }
-            return validClassSelections.ToList();
+            return validMainClassSelections.ToList();
+        }
+
+        private List<Class> ValidSecondaryClassSelections(Class mainClass)
+        {
+            return _classes
+                .Where(x => _request.ClassesToExclude.Contains(x.Id) == false)
+                .Where(x => x.Archetype == mainClass.HybridArchetype)
+                .Where(x => x.HybridClass == false)
+                .ToList();
         }
 
         private void ShowTooltip(ElementReference elementReference, string text)

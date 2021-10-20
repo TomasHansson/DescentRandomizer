@@ -17,5 +17,6 @@ namespace Domain.DataTransferObjects
         public bool HybridClass { get; set; }
         public Archetype HybridArchetype { get; set; }
         public List<ClassCard> ClassCards { get; set; }
+        public List<ClassItem> ClassItems { get; set; }
     }
 }

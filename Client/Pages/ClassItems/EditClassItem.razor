@@ -1,0 +1,40 @@
+﻿@page "/ClassItems/{id}/Edit"
+
+@if (_classes is null)
+{
+    <p>Loading classes for lookups...</p>
+}
+else
+{
+    <RadzenTemplateForm TItem="ClassItem" Data="@_classItem" Submit="@Submit">
+        <RadzenFieldset Text="Edit Class Item">
+            <InputComponent Label="Class">
+                <RadzenDropDown @bind-Value="@_classItem.ClassId" TValue="Guid" Data="_classes" TextProperty="Name" ValueProperty="Id" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Name">
+                <RadzenTextBox @bind-Value="@_classItem.Name" Name="Name" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required." />
+            </InputComponent>
+            <InputComponent Label="Traits">
+                <RadzenTextBox @bind-Value="@_classItem.Traits" Name="Traits" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Traits" Text="Traits is required." />
+            </InputComponent>
+            <InputComponent Label="Equip Type">
+                <RadzenDropDown @bind-Value="@_classItem.EquipType" TValue="EquipType" Data="Utility.EnumUtilities.GetEquipTypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%" />
+            </InputComponent>
+            <InputComponent Label="Weapon Type">
+                <RadzenDropDown @bind-Value="@_classItem.WeaponType" TValue="WeaponType" Data="Utility.EnumUtilities.GetWeaponTypes()" TextProperty="Name" ValueProperty="Value" Style="width: 100%"
+                                Disabled="@(_classItem.EquipType != EquipType.OneHand && _classItem.EquipType != EquipType.TwoHands)" />
+            </InputComponent>
+            <InputComponent Label="Power Die">
+                <RadzenDropDown @bind-Value="@_classItem.PowerDie" TValue="PowerDie" Data="Utility.EnumUtilities.GetPowerDices()" TextProperty="Name" ValueProperty="Value" Style="width: 100%"
+                                Disabled="@(_classItem.EquipType != EquipType.OneHand && _classItem.EquipType != EquipType.TwoHands)" />
+            </InputComponent>
+            <InputComponent Label="Text">
+                <RadzenTextArea @bind-Value="@_classItem.Text" Name="Text" Style="width: 100%" />
+                <RadzenRequiredValidator Component="Text" Text="Text is required." />
+            </InputComponent>
+            <AlignedButton Alignment="Alignment.Right" ButtonType="ButtonType.Submit" Text="Edit Class Item" />
+        </RadzenFieldset>
+    </RadzenTemplateForm>
+}

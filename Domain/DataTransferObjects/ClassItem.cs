@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.DataTransferObjects
 {
-    public class ClassCard
+    public class ClassItem
     {
         public Guid Id { get; set; }
         public Guid ClassId { get; set; }
         [Required]
         public string Name { get; set; }
-        public int ExperienceCost { get; set; }
-        [Required]
-        public string PlayCost { get; set; }
         [Required]
         public string Text { get; set; }
+        [Required]
+        public string Traits { get; set; }
+        public EquipType EquipType { get; set; }
+        public WeaponType WeaponType { get; set; }
+        public PowerDie PowerDie { get; set; }
     }
 }

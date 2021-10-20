@@ -1,0 +1,49 @@
+﻿@page "/ClassItems/{Message?}"
+
+@if (_classItems is null)
+{
+    <p>Loading class items...</p>
+}
+else
+{
+    <RadzenGrid AllowPaging="true" PageSize="20" AllowSorting="true" Data="@_classItems" TItem="ClassItem" ColumnWidth="100px">
+        <Columns>
+            <RadzenGridColumn TItem="ClassItem" Title="Class">
+                <Template Context="classItem">
+                    @_classes.First(x => x.Id == classItem.ClassId).Name
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ClassItem" Property="Name" Title="Name" />
+            <RadzenGridColumn TItem="ClassItem" Property="Traits" Title="Traits" />
+            <RadzenGridColumn TItem="ClassItem" Property="EquipType" Title="Equip Type">
+                <Template Context="classItem">
+                    @(classItem.EquipType switch
+                    {
+                        EquipType.OneHand => "One Hand",
+                        EquipType.TwoHands => "Two Hands",
+                        EquipType.Other => "Other",
+                        EquipType.Armor => "Armor"
+                    })
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ClassItem" Title="Weapon Type">
+                <Template Context="classItem">
+                    @(classItem.WeaponType == WeaponType.None ? "-" : classItem.WeaponType.ToString())
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ClassItem" Title="Attack Dice">
+                <Template Context="classItem">
+                    @(classItem.WeaponType == WeaponType.None ? "-" : $"Blue {classItem.PowerDie}")
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ClassItem" Title="Actions" Sortable="false" Width="135px">
+                <Template Context="classItem">
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => ShowClassItemDetails(classItem)" Icon="list" MouseEnter="@(args => ShowTooltip(args, "Show Details"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => GoToEdit(classItem)" Icon="edit" MouseEnter="@(args => ShowTooltip(args, "Edit Class Item"))" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="() => DeleteClassItem(classItem)" Icon="delete" MouseEnter="@(args => ShowTooltip(args, ""))" />
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+    <AlignedButton Alignment="Alignment.Right" Text="Create Class Item" ButtonType="ButtonType.Button" Click="() => GoToCreateClassItem()" />
+}

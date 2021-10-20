@@ -20,6 +20,8 @@ namespace Api
             builder.Services.AddScoped<IClassCardRepository, ClassCardRepository>();
             builder.Services.AddScoped<IClassRepository, ClassRepository>();
             builder.Services.AddScoped<IHeroesRepository, HeroesRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IClassItemRepository, ClassItemRepository>();
         }
     }
 }
