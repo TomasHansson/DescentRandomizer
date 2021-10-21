@@ -1,54 +1,85 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <RadzenNotification />
 <RadzenDialog />
 <RadzenTooltip />
 
-<RadzenHeader>
-    <div class="row align-items-center">
-        <div class="col-6 d-flex align-items-center">
-            <RadzenSidebarToggle Click="@(() => { sidebar.Toggle(); body.Toggle(); })" />
+<MediaQueryList>
+    <RadzenHeader>
+        <div class="row" style="min-height: 50px">
+            <div class="col">
+                <RadzenSidebarToggle Visible="LargeUp" Click="SideBarToggleClicked" />
+            </div>
+            <div class="col d-flex align-items-center flex-row-reverse mr-2">
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Click="@(() => NavigationManager.NavigateTo("/"))" Text="Index" />
+            </div>
         </div>
-        <div class="col-6 d-flex align-items-center">
-        </div>
-    </div>
-</RadzenHeader>
+    </RadzenHeader>
 
-<RadzenBody @ref="@body">
-    <RadzenContentContainer Name="main">
-        @Body
-    </RadzenContentContainer>
-</RadzenBody>
+    <RadzenBody @bind-Expanded="bodyExpanded">
+        <RadzenContentContainer Name="main">
+            @Body
+        </RadzenContentContainer>
+    </RadzenBody>
 
-<RadzenSidebar @ref="@sidebar">
-    <br />
-    <RadzenPanelMenu>
-        <RadzenPanelMenuItem Text="Administration">
-            <AuthorizeView>
-                <Authorized>
-                    <RadzenPanelMenuItem Text="Heroes" Path="/Heroes" Icon="face" />
-                    <RadzenPanelMenuItem Text="Classes" Path="/Classes" Icon="account_circle" />
-                    <RadzenPanelMenuItem Text="Class Cards" Path="/ClassCards" Icon="style" />
-                    <RadzenPanelMenuItem Text="Class Items" Path="/ClassItems" Icon="work" />
-                    <RadzenPanelMenuItem Text="Logout" Path="/Logout" Icon="logout" />
-                </Authorized>
-                <NotAuthorized>
-                    <RadzenPanelMenuItem Text="Login" Path="/Login" Icon="login" />
-                </NotAuthorized>
-            </AuthorizeView>
-        </RadzenPanelMenuItem>
-        <RadzenPanelMenuItem Text="Randomizer">
-            <RadzenPanelMenuItem Text="Single Character" Path="/Randomize/Character" Icon="person" />
-            <RadzenPanelMenuItem Text="Full Party" Path="/Randomize/Party" Icon="groups" />
-        </RadzenPanelMenuItem>
-    </RadzenPanelMenu>
-</RadzenSidebar>
+    <RadzenSidebar @bind-Expanded="sideBarExpanded" >
+        <br />
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Administration">
+                <AuthorizeView>
+                    <Authorized>
+                        <RadzenPanelMenuItem Text="Heroes" Path="/Heroes" Icon="face" />
+                        <RadzenPanelMenuItem Text="Classes" Path="/Classes" Icon="account_circle" />
+                        <RadzenPanelMenuItem Text="Class Cards" Path="/ClassCards" Icon="style" />
+                        <RadzenPanelMenuItem Text="Class Items" Path="/ClassItems" Icon="work" />
+                        <RadzenPanelMenuItem Text="Logout" Path="/Logout" Icon="logout" />
+                    </Authorized>
+                    <NotAuthorized>
+                        <RadzenPanelMenuItem Text="Login" Path="/Login" Icon="login" />
+                    </NotAuthorized>
+                </AuthorizeView>
+            </RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Randomizer">
+                <RadzenPanelMenuItem Text="Single Character" Path="/Randomize/Character" Icon="person" />
+                <RadzenPanelMenuItem Text="Full Party" Path="/Randomize/Party" Icon="groups" />
+            </RadzenPanelMenuItem>
+        </RadzenPanelMenu>
+    </RadzenSidebar>
 
-<RadzenFooter>
-    <RadzenLabel Text="Descent Randomizer" />
-</RadzenFooter>
+    <RadzenFooter>
+        <RadzenLabel Text="Descent Randomizer" />
+    </RadzenFooter>
+
+    <MediaQuery Media="@Breakpoints.LargeUp" @bind-Matches="LargeUp" />
+</MediaQueryList>
 
 @code {
-    private RadzenSidebar sidebar;
-    private RadzenBody body;
+    private bool bodyExpanded = true;
+    private bool sideBarExpanded = false;
+    private bool userCollapsedSidebar = false;
+
+    private bool largeUp = false;
+    private bool LargeUp { get { return largeUp; } set { largeUp = value; CollapseSideBarIfSmallerThanLarge(); } }
+
+    private void SideBarToggleClicked()
+    {
+        sideBarExpanded = !sideBarExpanded;
+        bodyExpanded = !bodyExpanded;
+        userCollapsedSidebar = !sideBarExpanded;
+    }
+
+    private void CollapseSideBarIfSmallerThanLarge()
+    {
+        if (largeUp == false && sideBarExpanded == true)
+        {
+            sideBarExpanded = false;
+            bodyExpanded = true;
+        }
+        else if (largeUp == true && userCollapsedSidebar == false)
+        {
+            sideBarExpanded = true;
+            bodyExpanded = false;
+        }
+    }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BlazorApp.Client.Services;
+using BlazorPro.BlazorSize;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ namespace BlazorApp.Client
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, BasicAuthenticationStateProvider>();
+            builder.Services.AddMediaQueryService();
 
             await builder.Build().RunAsync();
         }

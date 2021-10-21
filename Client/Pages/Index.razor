@@ -1,5 +1,27 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
-<h1>Descent Randomizer</h1>
-<br />
-<h2>Welcome to Descent Randomizer. This tool can be used to randomly select a group of heroes and classes for the game Descent - Journeys in the Dark (2nd Edition).</h2>
+<h5>Welcome to the Descent Randomizer</h5> 
+<p>This tool can be used to randomly create either a single character or a full party for the game Descent - Journeys in the Dark (2nd Edition).</p>
+<div class="row">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <RadzenButton Icon="person" Text="Single Character" Click="GoToGenerateCharacter" Style="width: 100%" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4 mt-1">
+        <RadzenButton Icon="groups" Text="Full Party" Click="GoToGenerateParty" Style="width: 100%" />
+    </div>
+</div>
+
+@code {
+    private void GoToGenerateCharacter()
+    {
+        NavigationManager.NavigateTo("/Randomize/Character");
+    }
+
+    private void GoToGenerateParty()
+    {
+        NavigationManager.NavigateTo("/Randomize/Party");
+    }
+}
