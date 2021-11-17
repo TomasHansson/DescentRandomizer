@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.19" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.19" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
